@@ -2,9 +2,11 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
+from flask_cors import CORS, cross_origin
 
 
 app = Flask(__name__) # I create an instance of Flask I can use here
+cors = CORS(app) #initializes CORS
 
 # config.py file is better way to later connect db where all variables will live
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///weather_users'
@@ -52,6 +54,7 @@ users_schema = UserSchema(many=True)
 
 
 @app.route('/api/user', methods=['POST'])
+@cross_origin() #anytime we go to this route, satisfy the cross origin
 def add_user():
     name = request.json['name']
     email = request.json['email']
@@ -65,6 +68,7 @@ def add_user():
     return user_schema.jsonify(new_user)
 
 @app.route('/api/users', methods=['GET'])
+@cross_origin()
 def get_users():
     all_users = User.query.all()
     result = users_schema.dump(all_users)

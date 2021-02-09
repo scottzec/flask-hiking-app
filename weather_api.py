@@ -14,32 +14,15 @@ UNITS = '&units=imperial'
 
 def fetch_weather(lat, lon):
   lat_str = str(lat)
+  print(lat_str)
   lon_str = str(lon)
-  url = BASE_URL + lat_str + LON + lon_str + EXCLUDE + KEY + UNITS
+  url = BASE_URL + lat_str + LON + lon_str + EXCLUDE + 'afba879cbf23c5b78e3946c501e9eb49' + UNITS
 
   response = urllib.request.urlopen(url).read()
 
-  src = json.loads(response) 
+  json_response = json.loads(response) 
 
-  result = {
-        'location': {
-            'name': src['name'],
-            'country' : src['sys']['country'],
-            'lat': src['coord']['lat'],
-            'lon': src['coord']['lon'],
-            },
-        'temperature' : src['main']['temp'],
-        'humidity': src['main']['humidity'],
-        'wind' : {
-            'speed' : float(src['wind']['speed']) * 3.6,
-            'deg' : src['wind']['deg'] 
-        },
-        'cloud' : src['clouds']['all'],
-        'pressure' : src['main']['pressure'],
-    }
-    # last_result = result
-    # last_ts = datetime.now()
-  return result
+  return json_response
 
 
 

@@ -53,9 +53,7 @@ class UserSchema(marsh.Schema):
 user_schema = UserSchema() #reference to UserSchema class
 users_schema = UserSchema(many=True)
 
-def lookupWeather(lat,lon):
-    weather = weather_api.fetch_weather(lat,lon)
-    return weather
+
 
 
 
@@ -80,18 +78,29 @@ def get_users():
     result = users_schema.dump(all_users)
     return jsonify(result)
 
+def lookupWeather(lat,lon):
+    weather = weather_api.fetch_weather(lat,lon)
+    return weather
+
 # GET request is default in flask, any other one needs to be specified
 @app.route('/')
 def welcome():
     # return "Hiking Weather App Incoming"
-    return (lookupWeather(46.7853,-121.7353718))
+    rainier_weather = (lookupWeather(46.7853,-121.7353718))
+    day_temp = str(rainier_weather["daily"][0]["feels_like"]["day"])
+    forecast = str(rainier_weather["daily"][0]["weather"][0]["main"])
+    icon = str(rainier_weather["daily"][0]["weather"][0]["icon"])
+
+    weather_dict = { "temp": day_temp, "weather": forecast, "icon": icon }
+
+    return weather_dict
 
 
-@app.route('/weather')
-def getWeather():
-    """ Weather web service """
-    location = request.args.get("location", None)
-    return lookupWeather(location)
+# @app.route('/weather')
+# def getWeather():
+#     """ Weather web service """
+#     location = request.args.get("location", None)
+#     return lookupWeather(location)
     
 
 # @app.route('/browse', methods=["GET"])

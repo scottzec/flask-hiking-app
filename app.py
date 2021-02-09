@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
+import weather_api
 
 
 app = Flask(__name__) # I create an instance of Flask I can use here
@@ -52,6 +53,11 @@ class UserSchema(marsh.Schema):
 user_schema = UserSchema() #reference to UserSchema class
 users_schema = UserSchema(many=True)
 
+def lookupWeather(lat,lon):
+    weather = weather_api.fetch_weather(lat,lon)
+    return weather
+
+
 
 @app.route('/api/user', methods=['POST'])
 @cross_origin() #anytime we go to this route, satisfy the cross origin
@@ -77,7 +83,16 @@ def get_users():
 # GET request is default in flask, any other one needs to be specified
 @app.route('/')
 def welcome():
-    return "Hiking Weather App Incoming"
+    # return "Hiking Weather App Incoming"
+    return (lookupWeather(46.7853,-121.7353718))
+
+
+@app.route('/weather')
+def getWeather():
+    """ Weather web service """
+    location = request.args.get("location", None)
+    return lookupWeather(location)
+    
 
 # @app.route('/browse', methods=["GET"])
 # def weather():
@@ -86,3 +101,9 @@ def welcome():
 # optional condition that makes sure you are running appropriate server file
 if __name__ == '__main__':
     app.run(debug=True) #remove for production, development only
+
+
+
+
+
+

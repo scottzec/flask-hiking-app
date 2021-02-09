@@ -2,21 +2,17 @@ import os
 import urllib.request
 import json
 from datetime import datetime
-
-# https://api.openweathermap.org/data/2.5/onecall?lat=46.7853&lon=-121.7353718&exclude=minutely,hourly,alerts&appid=afba879cbf23c5b78e3946c501e9eb49&units=imperial
+import config
 
 
 BASE_URL = 'https://api.openweathermap.org/data/2.5/onecall?lat='
-KEY = os.getenv('OPENWEATHERMAP_API_KEY')
+KEY = config.SECRET_KEY
 LON = '&lon='
 EXCLUDE = '&exclude=minutely,hourly,alerts&appid='
 UNITS = '&units=imperial'
 
 def fetch_weather(lat, lon):
-  lat_str = str(lat)
-  print(lat_str)
-  lon_str = str(lon)
-  url = BASE_URL + lat_str + LON + lon_str + EXCLUDE + 'afba879cbf23c5b78e3946c501e9eb49' + UNITS
+  url = BASE_URL + str(lat) + LON + str(lon) + EXCLUDE + KEY + UNITS
 
   response = urllib.request.urlopen(url).read()
 

@@ -4,6 +4,8 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 import weather_api
+from datetime import datetime, timezone
+
 
 
 app = Flask(__name__) # I create an instance of Flask I can use here
@@ -78,22 +80,38 @@ def get_users():
     result = users_schema.dump(all_users)
     return jsonify(result)
 
-def lookupWeather(lat,lon):
+def lookup_weather(lat,lon):
     weather = weather_api.fetch_weather(lat,lon)
     return weather
+
+def utc_to_local(utc_dt):
+    return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 # GET request is default in flask, any other one needs to be specified
 @app.route('/')
 def welcome():
     # return "Hiking Weather App Incoming"
-    rainier_weather = (lookupWeather(46.7853,-121.7353718))
+    rainier_weather = (lookup_weather(46.7853,-121.7353718))
+    day = "Today"
+    #NIGHTMARE converting UTC, find workaround: date = utc_to_local(str((rainier_weather["daily"][0]["dt"])))
     day_temp = str(rainier_weather["daily"][0]["feels_like"]["day"])
     forecast = str(rainier_weather["daily"][0]["weather"][0]["main"])
     icon = str(rainier_weather["daily"][0]["weather"][0]["icon"])
+    rainier_dict = { "region": "Rainier", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    
+    mntn_loop_weather = (lookup_weather(48.088049, -121.389147))
+    day = "Today"
+    day_temp = str(mntn_loop_weather["daily"][0]["feels_like"]["day"])
+    forecast = str(mntn_loop_weather["daily"][0]["weather"][0]["main"])
+    icon = str(mntn_loop_weather["daily"][0]["weather"][0]["icon"])
+    mntn_loop_dict = { "region": "Rainier", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
 
-    weather_dict = { "temp": day_temp, "weather": forecast, "icon": icon }
+    weather_list_of_dicts = {
+        "Tahoma": rainier_dict,
+        "Mountain Loop Highway": mntn_loop_dict
+    }
 
-    return weather_dict
+    return weather_list_of_dicts
 
 
 # @app.route('/weather')

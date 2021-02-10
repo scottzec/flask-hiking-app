@@ -106,12 +106,12 @@ def welcome():
     icon = str(mntn_loop_weather["daily"][0]["weather"][0]["icon"])
     mntn_loop_dict = { "region": "Mountain Loop Highway", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
 
-    weather_list_of_dicts = {
-        "Tahoma": rainier_dict,
-        "MountainLoop": mntn_loop_dict
-    }
+    weather_list_of_dicts = [
+        rainier_dict,
+        mntn_loop_dict
+    ]
 
-    return weather_list_of_dicts
+    return jsonify(weather_list_of_dicts)
 
 
 # @app.route('/weather')

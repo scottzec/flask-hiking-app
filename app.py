@@ -108,7 +108,7 @@ def welcome():
 
     weather_list_of_dicts = {
         "Tahoma": rainier_dict,
-        "Mountain Loop Highway": mntn_loop_dict
+        "MountainLoop": mntn_loop_dict
     }
 
     return weather_list_of_dicts

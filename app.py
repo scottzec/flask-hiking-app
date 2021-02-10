@@ -104,7 +104,7 @@ def welcome():
     day_temp = str(mntn_loop_weather["daily"][0]["feels_like"]["day"])
     forecast = str(mntn_loop_weather["daily"][0]["weather"][0]["main"])
     icon = str(mntn_loop_weather["daily"][0]["weather"][0]["icon"])
-    mntn_loop_dict = { "region": "Rainier", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    mntn_loop_dict = { "region": "Mountain Loop Highway", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
 
     weather_list_of_dicts = {
         "Tahoma": rainier_dict,

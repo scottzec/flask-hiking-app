@@ -12,7 +12,7 @@ app = Flask(__name__) # I create an instance of Flask I can use here
 cors = CORS(app) #initializes CORS
 
 # config.py file is better way to later connect db where all variables will live
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///weather_users'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///login_users'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # init db
@@ -27,18 +27,13 @@ marsh = Marshmallow(app)
 # USER MODEL, inherits class from SQLAlchemy parent class. User will be child of model class
 class User(db.Model): 
     id = db.Column(db.Integer, primary_key = True) # would autogenerate postsql, but python needs it to be defined
-    name = db.Column(db.String)
-    email = db.Column(db.String)
-    zipcode = db.Column(db.Integer)
-    # region1 = db.Column('region1', db.String) How to from limited list?
+    username = db.Column(db.String)
+    password = db.Column(db.String)
 
     # Constructor: initialization function triggered when we create an instance
-    def __init__ (self, name, email, zipcode):
-        self.name = name
-        self.email = email
-        self.zipcode = zipcode
-        # self.region1 = region1
-        # self.region2 = region2
+    def __init__ (self, username, password):
+        self.username = username
+        self.password = password
 
     def __repr__(self): # offical way to represent string when we call it
         return '<id {}>'.format(self.id)
@@ -47,9 +42,8 @@ class UserSchema(marsh.Schema):
     class Meta: # describes the data fields we need
         fields = (
             'id',
-            'name',
-            'email',
-            'zipcode'
+            'username',
+            'password'
         )
 
 user_schema = UserSchema() #reference to UserSchema class
@@ -62,11 +56,10 @@ users_schema = UserSchema(many=True)
 @app.route('/api/user', methods=['POST'])
 @cross_origin() #anytime we go to this route, satisfy the cross origin
 def add_user():
-    name = request.json['name']
-    email = request.json['email']
-    zipcode = request.json['zipcode']
+    username = request.json['username']
+    password = request.json['password']
 
-    new_user = User(name, email, zipcode)
+    new_user = User(username, password) 
 
     db.session.add(new_user)
     db.session.commit()
@@ -97,7 +90,7 @@ def welcome():
     day_temp = str(rainier_weather["daily"][0]["feels_like"]["day"])
     forecast = str(rainier_weather["daily"][0]["weather"][0]["main"])
     icon = str(rainier_weather["daily"][0]["weather"][0]["icon"])
-    rainier_dict = { "region": "Rainier", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    rainier_dict = { "region": "Tahoma", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
     
     mntn_loop_weather = (lookup_weather(48.088049, -121.389147))
     day = "Today"

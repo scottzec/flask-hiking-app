@@ -59,6 +59,12 @@ def add_user():
     username = request.json['username']
     password = request.json['password']
 
+    # sqlalchemy, looks up user in the db 
+    user = User.query.filter(User.username==username, User.password==password).first()
+
+    if user:
+        return user_schema.jsonify(user)
+
     new_user = User(username, password) 
 
     db.session.add(new_user)

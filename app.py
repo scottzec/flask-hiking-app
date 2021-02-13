@@ -29,11 +29,36 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key = True) # would autogenerate postsql, but python needs it to be defined
     username = db.Column(db.String)
     password = db.Column(db.String)
+    regions = db.relationship('Region', backref='user')
 
-    # Constructor: initialization function triggered when we create an instance
-    def __init__ (self, username, password):
+    def __init__ (self, username, password): #ADD REGIONS=[] here??
+        self.id = id
         self.username = username
         self.password = password
+
+    # def __init__ (self, username, password, regions = None):
+    #     if regions is None:
+    #         regions = []
+    #     self.id = id
+    #     self.username = username
+    #     self.password = password
+    
+    def __repr__(self): # offical way to represent string when we call it
+        return '<id {}>'.format(self.id)
+
+class Region(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    region_name = db.Column(db.String) #, nullable=False ??
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #nullable=False?
+
+    # Constructor: initialization function triggered when we create an instance
+    # def __init__ (self, username, password, regions = []): added regions for 2nd table
+
+    def __init__ (self, region_name, user):
+        self.id = id
+        self.region_name = region_name
+        self.user_id = user
 
     def __repr__(self): # offical way to represent string when we call it
         return '<id {}>'.format(self.id)
@@ -49,8 +74,28 @@ class UserSchema(marsh.Schema):
 user_schema = UserSchema() #reference to UserSchema class
 users_schema = UserSchema(many=True)
 
+# NEED MARSHMALLOW FOR REGION TABLE TOO?
+class RegionSchema(marsh.Schema):
+    class Meta: # describes the data fields we need
+        fields = (
+            'id',
+            'region_name',
+            'user_id'
+        )
 
+region_schema = RegionSchema() #reference to UserSchema class
+regions_schema = RegionSchema(many=True)
 
+u = User(username='foo', password='boo')
+r = Region(region_name='Kulshan', user=u)
+
+u.regions.append(r)
+
+db.session.add(u)
+db.session.add(r)
+db.session.commit()
+
+print(u.regions.count())
 
 
 @app.route('/api/user', methods=['POST'])
@@ -83,8 +128,8 @@ def lookup_weather(lat,lon):
     weather = weather_api.fetch_weather(lat,lon)
     return weather
 
-def utc_to_local(utc_dt):
-    return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
+# def utc_to_local(utc_dt):
+#     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 # GET request is default in flask, any other one needs to be specified
 @app.route('/')
@@ -125,8 +170,8 @@ def welcome():
 #     return jsonify({"region": "Snoqualmie"})
 
 # optional condition that makes sure you are running appropriate server file
-if __name__ == '__main__':
-    app.run(debug=True) #remove for production, development only
+# if __name__ == '__main__':
+#     app.run(debug=True) #remove for production, development only
 
 
 

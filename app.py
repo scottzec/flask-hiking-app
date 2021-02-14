@@ -29,7 +29,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key = True) # would autogenerate postsql, but python needs it to be defined
     username = db.Column(db.String)
     password = db.Column(db.String)
-    regions = db.relationship('Region', backref='user')
+    # region_id = db.Column(db.Integer, db.ForeignKey('region.id'))
+    
+    # region = db.relationship('Region', foreign_keys=[region_id])
+
+    # regions = db.relationship('Region', backref='user')
+
 
     # Constructor: initialization function triggered when we create an instance
     # def __init__ (self, username, password, regions = []): added regions for 2nd table
@@ -38,6 +43,7 @@ class User(db.Model):
         # self.id = id #postgres creates it for me automatically apparently
         self.username = username
         self.password = password
+        # self.region_id = region_id
 
 
     def __repr__(self): # offical way to represent string when we call it
@@ -47,34 +53,32 @@ class Region(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     region_name = db.Column(db.String) #, nullable=False ??
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #nullable=False?
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #nullable=False?
+    # users = db.relationship('User', backref='region')
 
-    def __init__ (self, region_name, user):
+
+    def __init__ (self, region_name, user_id): #, user
         # self.id = id shouldnt need it
         self.region_name = region_name
-        self.user_id = user
+        self.user_id = user_id
 
     def __repr__(self): # offical way to represent string when we call it
         return '<id {}>'.format(self.id)
 
 class UserSchema(marsh.Schema):
     class Meta: # describes the data fields we need
-        fields = (
-            'id',
-            'username',
-            'password'
-        )
+        fields = ('id','username','password')
+
 
 user_schema = UserSchema() #reference to UserSchema class
 users_schema = UserSchema(many=True)
 
 class RegionSchema(marsh.Schema):
     class Meta: # describes the data fields we need
-        fields = (
-            'id',
-            'region_name',
-            'user_id'
-        )
+        # tuple: immutable list, can't access it, only items
+        fields = ('id','region_name', 'user_id')
+    
+    user = marsh.Nested(UserSchema)
 
 region_schema = RegionSchema() #reference to RegionSchema class
 regions_schema = RegionSchema(many=True)
@@ -98,14 +102,15 @@ regions_schema = RegionSchema(many=True)
 def add_user():
     username = request.json['username']
     password = request.json['password']
+    # region_id = request.json['region_id']
 
     # sqlalchemy, looks up user in the db 
-    user = User.query.filter(User.username==username, User.password==password).first()
+    user = User.query.filter(User.username==username, User.password==password).first() #, User.region_id==region_id
 
     if user:
         return user_schema.jsonify(user)
 
-    new_user = User(username, password) 
+    new_user = User(username, password)  #, region_id
 
     db.session.add(new_user)
     db.session.commit()
@@ -126,12 +131,12 @@ def add_region():
 # need to get user id from session instaead of the request. try getting it from local storage.
 
     # Shouldn't be necesary for region: sqlalchemy, looks up user in the db 
-    region = Region.query.filter(Region.region_name==region_name, Region.user_id==user_id).first()
+    # region = Region.query.filter(Region.region_name==region_name, Region.user_id==user_id).first()
 
-    if region:
-        return region_schema.jsonify(region)
+    # if region:
+    #     return region_schema.jsonify(region)
 
-    new_region = Region(region_name, user_id) 
+    new_region = Region(region_name, user_id)
 
     db.session.add(new_region)
     db.session.commit()

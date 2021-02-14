@@ -35,7 +35,7 @@ class User(db.Model):
     # def __init__ (self, username, password, regions = []): added regions for 2nd table
 
     def __init__ (self, username, password): #ADD REGIONS=[] here??
-        # self.id = id #postgres creates it for me
+        # self.id = id #postgres creates it for me automatically apparently
         self.username = username
         self.password = password
 

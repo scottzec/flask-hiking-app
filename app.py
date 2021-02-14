@@ -31,18 +31,15 @@ class User(db.Model):
     password = db.Column(db.String)
     regions = db.relationship('Region', backref='user')
 
+    # Constructor: initialization function triggered when we create an instance
+    # def __init__ (self, username, password, regions = []): added regions for 2nd table
+
     def __init__ (self, username, password): #ADD REGIONS=[] here??
-        self.id = id
+        # self.id = id #postgres creates it for me
         self.username = username
         self.password = password
 
-    # def __init__ (self, username, password, regions = None):
-    #     if regions is None:
-    #         regions = []
-    #     self.id = id
-    #     self.username = username
-    #     self.password = password
-    
+
     def __repr__(self): # offical way to represent string when we call it
         return '<id {}>'.format(self.id)
 
@@ -52,11 +49,8 @@ class Region(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #nullable=False?
 
-    # Constructor: initialization function triggered when we create an instance
-    # def __init__ (self, username, password, regions = []): added regions for 2nd table
-
     def __init__ (self, region_name, user):
-        self.id = id
+        # self.id = id shouldnt need it
         self.region_name = region_name
         self.user_id = user
 
@@ -74,7 +68,6 @@ class UserSchema(marsh.Schema):
 user_schema = UserSchema() #reference to UserSchema class
 users_schema = UserSchema(many=True)
 
-# NEED MARSHMALLOW FOR REGION TABLE TOO?
 class RegionSchema(marsh.Schema):
     class Meta: # describes the data fields we need
         fields = (
@@ -83,19 +76,21 @@ class RegionSchema(marsh.Schema):
             'user_id'
         )
 
-region_schema = RegionSchema() #reference to UserSchema class
+region_schema = RegionSchema() #reference to RegionSchema class
 regions_schema = RegionSchema(many=True)
 
-u = User(username='foo', password='boo')
-r = Region(region_name='Kulshan', user=u)
 
-u.regions.append(r)
+# # TEST WITH SAMPLE ADD WITHOUT API CALL
+# u = User(username='foo', password='boo')
+# r = Region(region_name='Kulshan', user=u)
 
-db.session.add(u)
-db.session.add(r)
-db.session.commit()
+# db.session.add(u)
+# db.session.commit()
+# db.session.add(r)
+# db.session.commit()
 
-print(u.regions.count())
+
+# print(u.regions.count())
 
 
 @app.route('/api/user', methods=['POST'])
@@ -116,6 +111,32 @@ def add_user():
     db.session.commit()
 
     return user_schema.jsonify(new_user)
+
+@app.route('/api/region', methods=['POST'])
+@cross_origin() #anytime we go to this route, satisfy the cross origin
+def add_region():
+    region_name = request.json['region_name']
+    user_id = request.json['user_id']
+
+# CHRIS NOTES
+# THIS IS MISSING KEEPING TRACK OF USER. route parameter, session token.
+# like a nested route
+# api/user/:user_id/regions we had in rails. Then when we did a new post request, it looked at the route to find the user that went with it
+# could also keep track of user in session token
+# need to get user id from session instaead of the request. try getting it from local storage.
+
+    # Shouldn't be necesary for region: sqlalchemy, looks up user in the db 
+    region = Region.query.filter(Region.region_name==region_name, Region.user_id==user_id).first()
+
+    if region:
+        return region_schema.jsonify(region)
+
+    new_region = Region(region_name, user_id) 
+
+    db.session.add(new_region)
+    db.session.commit()
+
+    return region_schema.jsonify(new_region)
 
 @app.route('/api/users', methods=['GET'])
 @cross_origin()
@@ -170,8 +191,8 @@ def welcome():
 #     return jsonify({"region": "Snoqualmie"})
 
 # optional condition that makes sure you are running appropriate server file
-# if __name__ == '__main__':
-#     app.run(debug=True) #remove for production, development only
+if __name__ == '__main__':
+    app.run(debug=True) #remove for production, development only
 
 
 

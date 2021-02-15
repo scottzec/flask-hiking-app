@@ -5,6 +5,12 @@ from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 import weather_api
 from datetime import datetime, timezone
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+SECRET_KEY = os.environ.get("SECRET_KEY", None)
 
 
 app = Flask(__name__) # I create an instance of Flask I can use here

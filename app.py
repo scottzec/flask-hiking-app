@@ -194,8 +194,3 @@ def welcome():
 if __name__ == '__main__':
     app.run(debug=True) #remove for production, development only
 
-
-
-
-
-

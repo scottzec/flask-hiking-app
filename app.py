@@ -7,7 +7,6 @@ import weather_api
 from datetime import datetime, timezone
 
 
-
 app = Flask(__name__) # I create an instance of Flask I can use here
 cors = CORS(app) #initializes CORS
 
@@ -114,10 +113,10 @@ def add_region():
 # need to get user id from session instaead of the request. try getting it from local storage.
 
     # Shouldn't be necesary for region: sqlalchemy, looks up user in the db 
-    region = Region.query.filter(Region.region_name==region_name, Region.user_id==user_id).first()
+    # region = Region.query.filter(Region.region_name==region_name, Region.user_id==user_id).first()
 
-    if region:
-        return region_schema.jsonify(region)
+    # if region:
+    #     return region_schema.jsonify(region)
 
     new_region = Region(region_name, user_id) 
 
@@ -139,6 +138,26 @@ def get_regions():
     all_regions = Region.query.all()
     result = regions_schema.dump(all_regions)
     return jsonify(result)
+
+# ROUTE RETURNS REGIONS ASSIGNED TO A USER ID
+@app.route('/api/regions/<user_id>/', methods=['GET'])
+@cross_origin()
+def get_regions_user(user_id):
+    regions_user = Region.query.filter(Region.user_id==user_id)
+    print(regions_user)
+
+    if regions_user:
+        return regions_schema.jsonify(regions_user)
+
+    return jsonify(result)
+
+# CREATE ROUTE TO PATCH A USER's REGIONS, OR DELETE?
+
+    
+
+        
+
+
 
 
 # def utc_to_local(utc_dt):

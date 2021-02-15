@@ -164,6 +164,16 @@ def get_regions_user(user_id):
 #     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 # GET request is default in flask, any other one needs to be specified
+@app.route('/weather/<region>')
+@cross_origin()
+def get_weather_region(region):
+    if region=="tahoma":
+        return "rainier_dict"
+    elif region=="mntnloop":
+        return "mntn_loop_dict"
+    else:
+        return "No weather"
+
 @app.route('/')
 def welcome():
     # return "Hiking Weather App Incoming"

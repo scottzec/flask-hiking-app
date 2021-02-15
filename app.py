@@ -153,24 +153,34 @@ def get_regions_user(user_id):
 
 # CREATE ROUTE TO PATCH A USER's REGIONS, OR DELETE?
 
-    
-
-        
 
 
 
-
-# def utc_to_local(utc_dt):
-#     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 # GET request is default in flask, any other one needs to be specified
 @app.route('/weather/<region>')
 @cross_origin()
 def get_weather_region(region):
+
+    rainier_weather = (lookup_weather(46.7853,-121.7353718))
+    day = "Today"
+    #NIGHTMARE converting UTC, find workaround: date = utc_to_local(str((rainier_weather["daily"][0]["dt"])))
+    day_temp = str(rainier_weather["daily"][0]["feels_like"]["day"])
+    forecast = str(rainier_weather["daily"][0]["weather"][0]["main"])
+    icon = str(rainier_weather["daily"][0]["weather"][0]["icon"])
+    rainier_dict = { "region": "Tahoma", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    
+    mntn_loop_weather = (lookup_weather(48.088049, -121.389147))
+    day = "Today"
+    day_temp = str(mntn_loop_weather["daily"][0]["feels_like"]["day"])
+    forecast = str(mntn_loop_weather["daily"][0]["weather"][0]["main"])
+    icon = str(mntn_loop_weather["daily"][0]["weather"][0]["icon"])
+    mntn_loop_dict = { "region": "Mountain Loop Highway", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+
     if region=="tahoma":
-        return "rainier_dict"
+        return jsonify(rainier_dict)
     elif region=="mntnloop":
-        return "mntn_loop_dict"
+        return jsonify(mntn_loop_dict)
     else:
         return "No weather"
 

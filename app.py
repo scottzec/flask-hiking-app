@@ -80,18 +80,6 @@ region_schema = RegionSchema() #reference to RegionSchema class
 regions_schema = RegionSchema(many=True)
 
 
-# # TEST WITH SAMPLE ADD WITHOUT API CALL
-# u = User(username='foo', password='boo')
-# r = Region(region_name='Kulshan', user=u)
-
-# db.session.add(u)
-# db.session.commit()
-# db.session.add(r)
-# db.session.commit()
-
-
-# print(u.regions.count())
-
 
 @app.route('/api/user', methods=['POST'])
 @cross_origin() #anytime we go to this route, satisfy the cross origin
@@ -145,9 +133,13 @@ def get_users():
     result = users_schema.dump(all_users)
     return jsonify(result)
 
-def lookup_weather(lat,lon):
-    weather = weather_api.fetch_weather(lat,lon)
-    return weather
+@app.route('/api/regions', methods=['GET'])
+@cross_origin()
+def get_regions():
+    all_regions = Region.query.all()
+    result = regions_schema.dump(all_regions)
+    return jsonify(result)
+
 
 # def utc_to_local(utc_dt):
 #     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
@@ -177,6 +169,11 @@ def welcome():
     ]
 
     return jsonify(weather_list_of_dicts)
+
+# DOESNT NEED TO BE IN ANY ROUTE, THIS LOOKS UP THE WEATHER, PERIOD
+def lookup_weather(lat,lon):
+    weather = weather_api.fetch_weather(lat,lon)
+    return weather
 
 
 # @app.route('/weather')

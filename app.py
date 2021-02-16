@@ -189,28 +189,28 @@ def get_weather_region(region):
 
 @app.route('/')
 def welcome():
-    # return "Hiking Weather App Incoming"
-    rainier_weather = (lookup_weather(46.7853,-121.7353718))
-    day = "Today"
-    #NIGHTMARE converting UTC, find workaround: date = utc_to_local(str((rainier_weather["daily"][0]["dt"])))
-    day_temp = str(rainier_weather["daily"][0]["feels_like"]["day"])
-    forecast = str(rainier_weather["daily"][0]["weather"][0]["main"])
-    icon = str(rainier_weather["daily"][0]["weather"][0]["icon"])
-    rainier_dict = { "region": "Tahoma", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    return "Hiking Weather App Incoming"
+    # rainier_weather = (lookup_weather(46.7853,-121.7353718))
+    # day = "Today"
+    # #NIGHTMARE converting UTC, find workaround: date = utc_to_local(str((rainier_weather["daily"][0]["dt"])))
+    # day_temp = str(rainier_weather["daily"][0]["feels_like"]["day"])
+    # forecast = str(rainier_weather["daily"][0]["weather"][0]["main"])
+    # icon = str(rainier_weather["daily"][0]["weather"][0]["icon"])
+    # rainier_dict = { "region": "Tahoma", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
     
-    mntn_loop_weather = (lookup_weather(48.088049, -121.389147))
-    day = "Today"
-    day_temp = str(mntn_loop_weather["daily"][0]["feels_like"]["day"])
-    forecast = str(mntn_loop_weather["daily"][0]["weather"][0]["main"])
-    icon = str(mntn_loop_weather["daily"][0]["weather"][0]["icon"])
-    mntn_loop_dict = { "region": "Mountain Loop Highway", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    # mntn_loop_weather = (lookup_weather(48.088049, -121.389147))
+    # day = "Today"
+    # day_temp = str(mntn_loop_weather["daily"][0]["feels_like"]["day"])
+    # forecast = str(mntn_loop_weather["daily"][0]["weather"][0]["main"])
+    # icon = str(mntn_loop_weather["daily"][0]["weather"][0]["icon"])
+    # mntn_loop_dict = { "region": "Mountain Loop Highway", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
 
-    weather_list_of_dicts = [
-        rainier_dict,
-        mntn_loop_dict
-    ]
+    # weather_list_of_dicts = [
+    #     rainier_dict,
+    #     mntn_loop_dict
+    # ]
 
-    return jsonify(weather_list_of_dicts)
+    # return jsonify(weather_list_of_dicts)
 
 # optional condition that makes sure you are running appropriate server file
 if __name__ == '__main__':

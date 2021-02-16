@@ -216,6 +216,10 @@ def get_weather_region(region):
     icon = str(stetattle_weather["daily"][0]["weather"][0]["icon"])
     stetattle_dict = { "region": "Stetattle", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
 
+    no_dict = { "region": "none", "day": "", "temp": "", "weather": "", "icon": "" }
+
+
+
     if region=="tahoma":
         return jsonify(rainier_dict)
     elif region=="mntnloop":
@@ -231,7 +235,7 @@ def get_weather_region(region):
     elif region=="stetattle":
         return jsonify(stetattle_dict)
     else:
-        return "No weather"
+        return jsonify(no_dict)
 
 @app.route('/')
 def welcome():

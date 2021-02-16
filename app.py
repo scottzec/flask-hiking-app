@@ -207,7 +207,7 @@ def get_weather_region(region):
     day_temp = str(skykomish_weather["daily"][0]["feels_like"]["day"])
     forecast = str(skykomish_weather["daily"][0]["weather"][0]["main"])
     icon = str(skykomish_weather["daily"][0]["weather"][0]["icon"])
-    skykomish_weather = { "region": "Skykomish", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    skykomish_dict = { "region": "Skykomish", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
 
     stetattle_weather = (lookup_weather(48.731757, -121.162726))
     day = "Today"

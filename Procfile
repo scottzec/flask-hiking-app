@@ -1,3 +1,3 @@
 web: gunicorn app:app --preload
 
-web: gunicorn gettingstarted.wsgi
+web: gunicorn flask-hiking-app.wsgi --log-file -

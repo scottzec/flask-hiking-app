@@ -13,6 +13,7 @@ UNITS = '&units=imperial'
 
 def fetch_weather(lat, lon):
   url = BASE_URL + str(lat) + LON + str(lon) + EXCLUDE + KEY + UNITS
+  print(url)
 
   response = urllib.request.urlopen(url).read()
 

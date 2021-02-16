@@ -191,7 +191,7 @@ def get_weather_region(region):
 
 @app.route('/')
 def welcome():
-    return "Hiking Weather App Incoming"
+    # return "Hiking Weather App Incoming"
     rainier_weather = (lookup_weather(46.7853,-121.7353718))
     day = "Today"
     #NIGHTMARE converting UTC, find workaround: date = utc_to_local(str((rainier_weather["daily"][0]["dt"])))

@@ -5,12 +5,12 @@ from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 import weather_api
 from datetime import datetime, timezone
-from dotenv import load_dotenv
-import os
+# from dotenv import load_dotenv
+# import os
 
-load_dotenv()
+# load_dotenv()
 
-SECRET_KEY = os.environ.get("SECRET_KEY", None)
+# SECRET_KEY = os.environ.get("SECRET_KEY", None)
 
 
 app = Flask(__name__) # I create an instance of Flask I can use here
@@ -85,6 +85,13 @@ region_schema = RegionSchema() #reference to RegionSchema class
 regions_schema = RegionSchema(many=True)
 
 
+# WEATHER LOOK-UP
+def lookup_weather(lat,lon):
+    weather = weather_api.fetch_weather(lat,lon)
+    return weather
+    
+
+# ROUTES
 
 @app.route('/api/user', methods=['POST'])
 @cross_origin() #anytime we go to this route, satisfy the cross origin
@@ -111,16 +118,9 @@ def add_region():
     region_name = request.json['region_name']
     user_id = request.json['user_id']
 
-# CHRIS NOTES
-# THIS IS MISSING KEEPING TRACK OF USER. route parameter, session token.
-# like a nested route
-# api/user/:user_id/regions we had in rails. Then when we did a new post request, it looked at the route to find the user that went with it
-# could also keep track of user in session token
-# need to get user id from session instaead of the request. try getting it from local storage.
 
     # Shouldn't be necesary for region: sqlalchemy, looks up user in the db 
     # region = Region.query.filter(Region.region_name==region_name, Region.user_id==user_id).first()
-
     # if region:
     #     return region_schema.jsonify(region)
 
@@ -214,23 +214,6 @@ def welcome():
     ]
 
     return jsonify(weather_list_of_dicts)
-
-# DOESNT NEED TO BE IN ANY ROUTE, THIS LOOKS UP THE WEATHER, PERIOD
-def lookup_weather(lat,lon):
-    weather = weather_api.fetch_weather(lat,lon)
-    return weather
-
-
-# @app.route('/weather')
-# def getWeather():
-#     """ Weather web service """
-#     location = request.args.get("location", None)
-#     return lookupWeather(location)
-    
-
-# @app.route('/browse', methods=["GET"])
-# def weather():
-#     return jsonify({"region": "Snoqualmie"})
 
 # optional condition that makes sure you are running appropriate server file
 if __name__ == '__main__':

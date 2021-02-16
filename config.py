@@ -1,9 +1,19 @@
 import os
 
-_mail_enabled = os.environ.get("MAIL_ENABLED", default="true")
-MAIL_ENABLED = _mail_enabled.lower() in {"1", "t", "true"}
-
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-if not SECRET_KEY:
-    raise ValueError("No SECRET_KEY set for Flask application")
+class Config(object):
+    DEBUG = False
+    TESTING = False
+    DATABASE_URI = 'sqlite:///:memory:'
+
+
+class ProductionConfig(Config):
+    DATABASE_URI = 'mysql://user@localhost/foo'
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+
+class TestingConfig(Config):
+    TESTING = True
+

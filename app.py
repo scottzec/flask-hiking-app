@@ -10,14 +10,11 @@ from datetime import datetime, timezone
 
 # load_dotenv()
 
-# SECRET_KEY = os.environ.get("SECRET_KEY", None)
-
-
 app = Flask(__name__) # I create an instance of Flask I can use here
 cors = CORS(app) #initializes CORS
 
 # config.py file is better way to later connect db where all variables will live
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///login_users'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///login_users' # SWITCH TO DEPLOYED DB
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # init db

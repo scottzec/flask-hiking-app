@@ -14,7 +14,9 @@ app = Flask(__name__) # I create an instance of Flask I can use here
 cors = CORS(app) #initializes CORS
 
 # config.py file is better way to later connect db where all variables will live
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///login_users' # SWITCH TO DEPLOYED DB
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///login_users' # SWITCH TO DEPLOYED DB
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ndkkehfxwfrhwx:8e9dcf6bf7d646cfed08f429670580fd545233e6df9ea58ac35783963aaceb30@ec2-34-230-167-186.compute-1.amazonaws.com:5432/d620dgs57jjv59'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # init db

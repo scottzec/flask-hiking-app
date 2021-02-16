@@ -169,7 +169,6 @@ def get_weather_region(region):
 
     rainier_weather = (lookup_weather(46.7853,-121.7353718))
     day = "Today"
-    #NIGHTMARE converting UTC, find workaround: date = utc_to_local(str((rainier_weather["daily"][0]["dt"])))
     day_temp = str(rainier_weather["daily"][0]["feels_like"]["day"])
     forecast = str(rainier_weather["daily"][0]["weather"][0]["main"])
     icon = str(rainier_weather["daily"][0]["weather"][0]["icon"])
@@ -182,10 +181,55 @@ def get_weather_region(region):
     icon = str(mntn_loop_weather["daily"][0]["weather"][0]["icon"])
     mntn_loop_dict = { "region": "Mountain Loop Highway", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
 
+    koma_kulshan_weather = (lookup_weather(48.903123, -121.695749))
+    day = "Today"
+    day_temp = str(koma_kulshan_weather["daily"][0]["feels_like"]["day"])
+    forecast = str(koma_kulshan_weather["daily"][0]["weather"][0]["main"])
+    icon = str(koma_kulshan_weather["daily"][0]["weather"][0]["icon"])
+    kulshan_dict = { "region": "Koma Kulshan", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    
+    quilcene_weather = (lookup_weather(47.827900, -123.041033))
+    day = "Today"
+    day_temp = str(quilcene_weather["daily"][0]["feels_like"]["day"])
+    forecast = str(quilcene_weather["daily"][0]["weather"][0]["main"])
+    icon = str(quilcene_weather["daily"][0]["weather"][0]["icon"])
+    quilcene_dict = { "region": "Quilcene", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    
+    teanaway_weather = (lookup_weather(47.328811, -120.854459))
+    day = "Today"
+    day_temp = str(teanaway_weather["daily"][0]["feels_like"]["day"])
+    forecast = str(teanaway_weather["daily"][0]["weather"][0]["main"])
+    icon = str(teanaway_weather["daily"][0]["weather"][0]["icon"])
+    teanaway_dict = { "region": "Teanaway", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+    
+    skykomish_weather = (lookup_weather(47.709799, -121.357118))
+    day = "Today"
+    day_temp = str(skykomish_weather["daily"][0]["feels_like"]["day"])
+    forecast = str(skykomish_weather["daily"][0]["weather"][0]["main"])
+    icon = str(skykomish_weather["daily"][0]["weather"][0]["icon"])
+    skykomish_weather = { "region": "Skykomish", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+
+    stetattle_weather = (lookup_weather(48.731757, -121.162726))
+    day = "Today"
+    day_temp = str(stetattle_weather["daily"][0]["feels_like"]["day"])
+    forecast = str(stetattle_weather["daily"][0]["weather"][0]["main"])
+    icon = str(stetattle_weather["daily"][0]["weather"][0]["icon"])
+    stetattle_dict = { "region": "Stetattle", "day": day, "temp": day_temp, "weather": forecast, "icon": icon }
+
     if region=="tahoma":
         return jsonify(rainier_dict)
     elif region=="mntnloop":
         return jsonify(mntn_loop_dict)
+    elif region=="kulshan":
+        return jsonify(kulshan_dict)
+    elif region=="quilcene":
+        return jsonify(quilcene_dict)
+    elif region=="skykomish":
+        return jsonify(skykomish_dict)
+    elif region=="teanaway":
+        return jsonify(teanaway_dict)
+    elif region=="stetattle":
+        return jsonify(stetattle_dict)
     else:
         return "No weather"
 
